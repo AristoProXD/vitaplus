@@ -33,6 +33,26 @@
       <div class="time-picker-group">
         <input type="time" id="med-time" name="med-time" required aria-label="Hora de toma">
       </div>
+      <label for="med-repeat">Repetir:</label>
+      <select id="med-repeat" name="med-repeat" aria-label="Repetir recordatorio">
+        <option value="once">Solo hoy</option>
+        <option value="diario">Todos los días</option>
+        <option value="lunes">Lunes</option>
+        <option value="martes">Martes</option>
+        <option value="miercoles">Miércoles</option>
+        <option value="jueves">Jueves</option>
+        <option value="viernes">Viernes</option>
+        <option value="sabado">Sábado</option>
+        <option value="domingo">Domingo</option>
+      </select>
+      <label for="med-note">Nota (opcional):</label>
+      <input type="text" id="med-note" name="med-note" maxlength="60" placeholder="Ej: Tomar con agua" aria-label="Nota o instrucción">
+      <label for="alarm-sound">Sonido de alarma:</label>
+      <select id="alarm-sound" name="alarm-sound" aria-label="Sonido de alarma">
+        <option value="alarm.mp3">Clásico</option>
+        <option value="beep.mp3">Beep</option>
+        <option value="bell.mp3">Campana</option>
+      </select>
       <button type="submit" id="add-btn">Agregar</button>
     </form>
     <section id="med-list-section">

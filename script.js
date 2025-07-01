@@ -34,17 +34,24 @@ renderMedList();
 
 
 let editIndex = null;
+const medRepeat = document.getElementById('med-repeat');
+const medNote = document.getElementById('med-note');
+const alarmSound = document.getElementById('alarm-sound');
 // Registrar o editar medicamento
 medForm.addEventListener('submit', function(e) {
   e.preventDefault();
   const nombre = medName.value.trim();
   const hora = medTime.value;
+  const repeat = medRepeat.value;
+  const note = medNote.value.trim();
+  const sound = alarmSound.value;
   if (!nombre || !hora) return;
+  const medObj = { nombre, hora, repeat, note, sound };
   if (editIndex !== null) {
-    medicamentos[editIndex] = { nombre, hora };
+    medicamentos[editIndex] = medObj;
     editIndex = null;
   } else {
-    medicamentos.push({ nombre, hora });
+    medicamentos.push(medObj);
   }
   localStorage.setItem('medicamentos', JSON.stringify(medicamentos));
   renderMedList();
@@ -62,7 +69,10 @@ function renderMedList() {
   }
   medicamentos.forEach((med, idx) => {
     const li = document.createElement('li');
-    li.innerHTML = `<span>${med.nombre}</span> <span class="med-time">${med.hora}</span>`;
+    let repeatText = med.repeat === 'once' ? 'Solo hoy' : (med.repeat === 'diario' ? 'Diario' : med.repeat.charAt(0).toUpperCase() + med.repeat.slice(1));
+    li.innerHTML = `<span>${med.nombre}</span> <span class="med-time">${med.hora}</span>` +
+      (med.note ? `<br><span style='font-size:0.95em;color:#888;'>${med.note}</span>` : '') +
+      `<br><span style='font-size:0.9em;color:#6c63ff;'>${repeatText}</span>`;
     // Acciones editar/eliminar con iconos
     const actions = document.createElement('span');
     actions.className = 'med-actions';
@@ -73,6 +83,9 @@ function renderMedList() {
     editBtn.onclick = () => {
       medName.value = med.nombre;
       medTime.value = med.hora;
+      medRepeat.value = med.repeat || 'once';
+      medNote.value = med.note || '';
+      alarmSound.value = med.sound || 'alarm.mp3';
       editIndex = idx;
       medForm.querySelector('#add-btn').textContent = 'Guardar';
       medName.focus();
@@ -111,19 +124,45 @@ clearListBtn.addEventListener('click', () => {
 // Recordatorio: comprobar cada minuto si hay que alertar
 setInterval(checkReminders, 1000 * 10); // cada 10 segundos para demo, cambiar a 60*1000 para producción
 let alertedToday = {};
+let alarmInterval = null;
 function checkReminders() {
   const now = new Date();
   const horaActual = now.toTimeString().slice(0,5); // formato HH:MM
+  const diaSemana = ['domingo','lunes','martes','miercoles','jueves','viernes','sabado'][now.getDay()];
   medicamentos.forEach((med) => {
-    if (med.hora === horaActual && !alertedToday[med.nombre + med.hora]) {
-      showAlert(`¡Hora de tomar: <b>${med.nombre}</b>!`);
-      alarmAudio.currentTime = 0;
-      alarmAudio.play();
-      alertedToday[med.nombre + med.hora] = true;
+    let debeAlertar = false;
+    if (med.repeat === 'diario') {
+      debeAlertar = med.hora === horaActual;
+    } else if (med.repeat === 'once') {
+      // Solo hoy
+      const key = med.nombre + med.hora + med.repeat;
+      if (med.hora === horaActual && !alertedToday[key]) {
+        debeAlertar = true;
+        alertedToday[key] = true;
+      }
+    } else if (med.repeat === diaSemana) {
+      debeAlertar = med.hora === horaActual;
+    }
+    if (debeAlertar && !alertedToday[med.nombre + med.hora + med.repeat]) {
+      showAlert(`¡Hora de tomar: <b>${med.nombre}</b>!<br>${med.note ? med.note : ''}`);
+      playAlarm(med.sound || 'alarm.mp3');
+      alertedToday[med.nombre + med.hora + med.repeat] = true;
       // Limpiar alertas viejas después de 2 minutos
-      setTimeout(() => { alertedToday[med.nombre + med.hora] = false; }, 120000);
+      setTimeout(() => { alertedToday[med.nombre + med.hora + med.repeat] = false; }, 120000);
     }
   });
+}
+
+function playAlarm(soundFile) {
+  alarmAudio.src = soundFile;
+  alarmAudio.currentTime = 0;
+  alarmAudio.play();
+  // Repetir alarma cada 10 segundos hasta cerrar
+  if (alarmInterval) clearInterval(alarmInterval);
+  alarmInterval = setInterval(() => {
+    alarmAudio.currentTime = 0;
+    alarmAudio.play();
+  }, 10000);
 }
 
 // Mostrar alerta visual
@@ -134,6 +173,12 @@ function showAlert(msg) {
 }
 closeAlert.addEventListener('click', () => {
   alertModal.hidden = true;
+  if (alarmInterval) {
+    clearInterval(alarmInterval);
+    alarmInterval = null;
+  }
+  alarmAudio.pause();
+  alarmAudio.currentTime = 0;
 });
 
 // Modo oscuro
