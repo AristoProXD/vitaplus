@@ -202,49 +202,50 @@ toggleDark.addEventListener('click', () => {
 // Accesibilidad: enfocar primer input al cargar
 window.onload = () => {
   medName.focus();
+  
+  // Configurar modal de planes después de que todo esté cargado
+  setupPlansModal();
 };
 
-// Panel de selección rápida de hora (mejorado)
-quickTimeBtn.addEventListener('click', (e) => {
-  e.preventDefault();
-  quickTimePanel.hidden = !quickTimePanel.hidden;
-});
-document.querySelectorAll('.quick-time-option').forEach(btn => {
-  btn.addEventListener('click', () => {
-    medTime.value = btn.textContent;
-    quickTimePanel.hidden = true;
-    medTime.focus();
-  });
-});
-// Cerrar panel si se hace clic fuera
-document.addEventListener('mousedown', (e) => {
-  if (!quickTimePanel.contains(e.target) && e.target !== quickTimeBtn) {
-    quickTimePanel.hidden = true;
+// Función para configurar el modal de planes
+function setupPlansModal() {
+  const plansBtn = document.getElementById('plans-btn');
+  const plansModal = document.getElementById('plans-modal');
+  const closePlans = document.getElementById('close-plans');
+  const premiumBtn = document.querySelector('.premium-btn');
+  
+  if (plansBtn && plansModal) {
+    plansBtn.addEventListener('click', () => {
+      console.log('Abriendo modal de planes...');
+      plansModal.style.display = 'flex';
+      plansModal.hidden = false;
+      if (closePlans) closePlans.focus();
+    });
   }
-});
-
-// Mostrar modal de planes
-plansBtn.addEventListener('click', () => {
-  plansModal.hidden = false;
-  closePlans.focus();
-});
-
-// Cerrar modal de planes
-closePlans.addEventListener('click', () => {
-  plansModal.hidden = true;
-});
-
-// Cerrar modal si se hace clic fuera
-plansModal.addEventListener('click', (e) => {
-  if (e.target === plansModal) {
-    plansModal.hidden = true;
+  
+  if (closePlans && plansModal) {
+    closePlans.addEventListener('click', () => {
+      console.log('Cerrando modal de planes...');
+      plansModal.hidden = true;
+      plansModal.style.display = 'none';
+    });
   }
-});
-
-// Botón de actualizar a premium
-document.querySelector('.premium-btn').addEventListener('click', () => {
-  alert('¡Gracias por tu interés! Esta función estará disponible próximamente.\n\nContacto: vitaplus@email.com');
-});
+  
+  if (plansModal) {
+    plansModal.addEventListener('click', (e) => {
+      if (e.target === plansModal) {
+        plansModal.hidden = true;
+        plansModal.style.display = 'none';
+      }
+    });
+  }
+  
+  if (premiumBtn) {
+    premiumBtn.addEventListener('click', () => {
+      alert('¡Gracias por tu interés! Esta función estará disponible próximamente.\n\nContacto: vitaplus@email.com');
+    });
+  }
+}
 
 // Nota: Para que el sonido funcione, debe existir alarm.mp3 en la carpeta del proyecto.
 // Puede usar un sonido corto de alarma libre de derechos.

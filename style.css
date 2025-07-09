@@ -275,6 +275,8 @@ button:active {
   padding: 12px 0;
   cursor: pointer;
   transition: background 0.2s;
+  text-align: center;
+  display: block;
 }
 #plans-btn:active {
   background: #ffcf85;
@@ -285,14 +287,14 @@ button:active {
   position: fixed;
   top: 0; left: 0; right: 0; bottom: 0;
   background: rgba(0,0,0,0.7);
-  display: flex;
+  display: none;
   align-items: center;
   justify-content: center;
   z-index: 1500;
   padding: 20px;
 }
 .modal[hidden] {
-  display: none;
+  display: none !important;
 }
 .plans-content {
   background: #fff;
