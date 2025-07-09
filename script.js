@@ -18,6 +18,11 @@ const alarmAudio = document.getElementById('alarm-audio');
 const quickTimeBtn = document.getElementById('quick-time-btn');
 const quickTimePanel = document.getElementById('quick-time-panel');
 
+// Elementos para planes
+const plansBtn = document.getElementById('plans-btn');
+const plansModal = document.getElementById('plans-modal');
+const closePlans = document.getElementById('close-plans');
+
 // Splash: mostrar presentación y luego app
 startBtn.addEventListener('click', () => {
   splash.classList.add('splash-hidden');
@@ -216,6 +221,29 @@ document.addEventListener('mousedown', (e) => {
   if (!quickTimePanel.contains(e.target) && e.target !== quickTimeBtn) {
     quickTimePanel.hidden = true;
   }
+});
+
+// Mostrar modal de planes
+plansBtn.addEventListener('click', () => {
+  plansModal.hidden = false;
+  closePlans.focus();
+});
+
+// Cerrar modal de planes
+closePlans.addEventListener('click', () => {
+  plansModal.hidden = true;
+});
+
+// Cerrar modal si se hace clic fuera
+plansModal.addEventListener('click', (e) => {
+  if (e.target === plansModal) {
+    plansModal.hidden = true;
+  }
+});
+
+// Botón de actualizar a premium
+document.querySelector('.premium-btn').addEventListener('click', () => {
+  alert('¡Gracias por tu interés! Esta función estará disponible próximamente.\n\nContacto: vitaplus@email.com');
 });
 
 // Nota: Para que el sonido funcione, debe existir alarm.mp3 en la carpeta del proyecto.

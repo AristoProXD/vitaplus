@@ -61,10 +61,47 @@
       <ul id="med-list" aria-live="polite"></ul>
     </section>
     <button id="toggle-dark" aria-pressed="false">Modo oscuro</button>
+    <button id="plans-btn" type="button">Ver Planes</button>
     <div id="alert-modal" role="alertdialog" aria-modal="true" hidden>
       <div class="modal-content">
         <span id="alert-text"></span>
         <button id="close-alert">Cerrar</button>
+      </div>
+    </div>
+    <div id="plans-modal" class="modal" hidden>
+      <div class="plans-content">
+        <h2>Planes de Vita+</h2>
+        <div class="plans-container">
+          <div class="plan-card free">
+            <h3>Plan Gratuito</h3>
+            <div class="price">$0</div>
+            <ul class="features">
+              <li>✓ Recordatorios básicos</li>
+              <li>✓ Agregar/editar medicamentos</li>
+              <li>✓ Modo oscuro</li>
+              <li>✓ Notas simples</li>
+              <li>✓ 3 sonidos de alarma</li>
+              <li>✓ Repetir recordatorios</li>
+            </ul>
+            <button class="plan-btn current">Plan Actual</button>
+          </div>
+          <div class="plan-card premium">
+            <h3>Plan Premium</h3>
+            <div class="price">$2.99</div>
+            <div class="period">por mes</div>
+            <ul class="features">
+              <li>✓ Todo del plan gratuito</li>
+              <li>✓ Recordatorios múltiples por día</li>
+              <li>✓ Fotos de medicamentos</li>
+              <li>✓ Compartir con familiares</li>
+              <li>✓ Historial de medicamentos</li>
+              <li>✓ Recordatorios inteligentes</li>
+              <li>✓ Soporte prioritario</li>
+            </ul>
+            <button class="plan-btn premium-btn">Actualizar</button>
+          </div>
+        </div>
+        <button id="close-plans" class="close-btn">×</button>
       </div>
     </div>
   </main>
