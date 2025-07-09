@@ -15,8 +15,6 @@ const alertModal = document.getElementById('alert-modal');
 const alertText = document.getElementById('alert-text');
 const closeAlert = document.getElementById('close-alert');
 const alarmAudio = document.getElementById('alarm-audio');
-const quickTimeBtn = document.getElementById('quick-time-btn');
-const quickTimePanel = document.getElementById('quick-time-panel');
 
 // Elementos para planes
 const plansBtn = document.getElementById('plans-btn');
@@ -200,12 +198,12 @@ toggleDark.addEventListener('click', () => {
 });
 
 // Accesibilidad: enfocar primer input al cargar
-window.onload = () => {
+window.addEventListener('DOMContentLoaded', () => {
   medName.focus();
   
   // Configurar modal de planes después de que todo esté cargado
   setupPlansModal();
-};
+});
 
 // Función para configurar el modal de planes
 function setupPlansModal() {
@@ -214,6 +212,8 @@ function setupPlansModal() {
   const closePlans = document.getElementById('close-plans');
   const premiumBtn = document.querySelector('.premium-btn');
   
+  console.log('Configurando modal de planes...', { plansBtn, plansModal, closePlans, premiumBtn });
+  
   if (plansBtn && plansModal) {
     plansBtn.addEventListener('click', () => {
       console.log('Abriendo modal de planes...');
@@ -221,6 +221,8 @@ function setupPlansModal() {
       plansModal.hidden = false;
       if (closePlans) closePlans.focus();
     });
+  } else {
+    console.error('No se encontraron elementos del modal de planes');
   }
   
   if (closePlans && plansModal) {
